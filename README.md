@@ -12,7 +12,7 @@ A secure banking platform integrating:
 - Secure transaction flow via Flask + PostgreSQL
 - Leverages the Sentinel Security Suite for security features.
 
-### 🛡 Sentinel Security Suite
+###  Sentinel Security Suite
 A modular security platform offering:
 - Identity Access Management (IAM)
 - Secure API requester (AES-GCM + SHA-1024)
@@ -52,7 +52,7 @@ Bank App:
 
 ## ️ Setup Instructions
 
-### 1️⃣Clone the Repository
+###   Clone the Repository
 
 ```bash
 git clone https://github.com/Frostblade-spec/ISPJ-Proj.git

@@ -1,0 +1,26 @@
+in the bank, create a new user with role of IT department
+
+for the main developer of the bank
+create a iam group
+then can add iam users created with your api key to the IT department through the username
+
+so now those users can login with their accounts through the iam portal to the user
+
+the sentinel admin side can see and edit user password
+
+
+Now i need to make the doucment verification system
+
+when the user export the pdf, metadata contains the public key
+the database stores the signature of the original pdf, the private key
+
+when the user upload pdf for verification, metadata extracts public key
+use public key to verify the signature in the db
+
+use elliptic curve crypto
+
+#then implement encryption of the signature for the pdf because
+# i need my quantum crypto to carry this out using that as the key
+# then use aes gcm
+
+#

@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
+    <meta name="author" content="AdminKit">
+    <meta name="keywords"
+          content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/icons/icon-48x48.png')}}"/>
+
+    <link rel="canonical" href="https://demo-basic.adminkit.io/charts-chartjs.html"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+
+    <title>Sentinel Developer Dashboard</title>
+    <link href="{{ url_for('static', filename='css/styling.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/app.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/evirec.css')}}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+<div class="wrapper">
+    <nav id="sidebar" class="sidebar js-sidebar">
+        <div class="sidebar-content js-simplebar">
+            <a class="sidebar-brand" href="index.html">
+                <span class="align-middle">Sentinel</span>
+            </a>
+
+            <ul class="sidebar-nav">
+                <li class="sidebar-header">
+                    Pages
+                </li>
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="{{ url_for('Sentinel_Routes.authenticated_user')}}">
+                        <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
+                    </a>
+                </li>
+
+                {% if not_iam(current_user.get_email()) %}
+                <li class="sidebar-item">
+                    <a class="sidebar-link"
+                       href="{{ url_for('Sentinel_Routes.userProfile_developer', username=current_user.get_username())}}">
+                        <i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="{{ url_for('Sentinel_Routes.logout')}}">
+                        <i class="align-middle" data-feather="log-in"></i> <span class="align-middle">Sign Out</span>
+                    </a>
+                </li>
+
+                </li>
+
+                <li class="sidebar-header">
+                    Tools & Components
+                </li>
+
+                {% if check_permission(current_user, "DEVELOPER") %}
+                <li class="sidebar-item">
+                    <a class="sidebar-link"
+                       href="{{ url_for('Sentinel_Routes.get_files_by_user', username=current_user.get_username())}}">
+                        <i class="align-middle" data-feather="square"></i> <span class="align-middle">Files</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% if check_permission(current_user, "DEVELOPER") %}
+                <li class="sidebar-item">
+                    <a class="sidebar-link"
+                       href="{{ url_for('Sentinel_Routes.get_buckets_by_user', username=current_user.get_username())}}">
+                        <i class="align-middle" data-feather="check-square"></i> <span class="align-middle">Storage</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% if check_permission(current_user, "DEVELOPER") %}
+                <li class="sidebar-item">
+                    <a class="sidebar-link"
+                       href="{{ url_for('Sentinel_Routes.get_backup_buckets_by_user', username=current_user.get_username())}}">
+                        <i class="align-middle" data-feather="check-square"></i> <span class="align-middle">Backups</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% if check_permission(current_user, "DEVELOPER") %}
+                <li class="sidebar-item">
+                    <a class="sidebar-link" id="current-page" href="#">
+                        <i class="align-middle" data-feather="grid"></i> <span class="align-middle">Analytics</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% if check_permission(current_user, "DEVELOPER") %}
+                <li class="sidebar-item">
+                    <a class="sidebar-link"
+                       href="{{ url_for('Sentinel_Routes.view_evirec_paths', username=current_user.get_username())}}">
+                        <i class="align-middle" data-feather="grid"></i> <span class="align-middle">Evirec</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% if check_permission(current_user, "DEVELOPER") and not_iam(current_user.get_email()) %}
+                <li class="sidebar-item">
+                    <a class="sidebar-link"
+                       href="{{ url_for('Sentinel_Routes.get_developer_users_dashboard', username=current_user.get_username())}}">
+                        <i class="align-middle" data-feather="align-left"></i> <span class="align-middle">IAM Users</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% if check_permission(current_user, "DEVELOPER") %}
+                <li class="sidebar-item">
+                    <a class="sidebar-link"
+                       href="{{ url_for('Sentinel_Routes.get_developer_roles_dashboard', username=current_user.get_username())}}">
+                        <i class="align-middle" data-feather="align-left"></i> <span class="align-middle">IAM Roles</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% if check_permission(current_user, "DEVELOPER") %}
+                <li class="sidebar-item">
+                    <a class="sidebar-link"
+                       href="">
+                        <i class="align-middle" data-feather="coffee"></i> <span class="align-middle">Key Management</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% if check_permission(current_user, "DEVELOPER") %}
+                <li class="sidebar-item">
+                    <a class="sidebar-link"
+                       href="{{ url_for('Sentinel_Routes.get_firewall_manager_dashboard', username=current_user.get_username())}}">
+                        <i class="align-middle" data-feather="coffee"></i> <span class="align-middle">Firewall Manager</span>
+                    </a>
+                </li>
+                {% endif %}
+
+
+
+            </ul>
+
+
+        </div>
+    </nav>
+
+    <div class="main">
+        <nav class="navbar navbar-expand navbar-light navbar-bg">
+            <a class="sidebar-toggle js-sidebar-toggle">
+                <i class="hamburger align-self-center"></i>
+            </a>
+
+            <div class="navbar-collapse collapse">
+                <ul class="navbar-nav navbar-align">
+                    <li class="nav-item dropdown">
+                        <a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
+                            <div class="position-relative">
+                                <i class="align-middle" data-feather="bell"></i>
+                                <span class="indicator">1</span>
+                            </div>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0"
+                             aria-labelledby="alertsDropdown">
+                            <div class="dropdown-menu-header">
+                                1 New Notification
+                            </div>
+                            <div class="list-group">
+                                <a href="#" class="list-group-item">
+                                    <div class="row g-0 align-items-center">
+                                        <div class="col-2">
+                                            <i class="text-danger" data-feather="alert-circle"></i>
+                                        </div>
+                                        <div class="col-10">
+                                            <div class="text-dark">2 Factor Authentication</div>
+                                            <div class="text-muted small mt-1">Recommended to activate in your user
+                                                profile.
+                                            </div>
+                                            <div class="text-muted small mt-1">30m ago</div>
+                                        </div>
+                                    </div>
+                                </a>
+
+
+                            </div>
+                            <div class="dropdown-menu-footer">
+                                <a href="#" class="text-muted">Show all notifications</a>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
+                            <i class="align-middle" data-feather="settings"></i>
+                        </a>
+
+                        <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
+
+                             <span class="text-dark">{{ username }}</span>
+
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" href="pages-profile.html"><i class="align-middle me-1"
+                                                                                  data-feather="user"></i> Profile</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="index.html"><i class="align-middle me-1"
+                                                                          data-feather="settings"></i> Settings &
+                                Privacy</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{url_for('Sentinel_Routes.logout') }}">Log out</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="content">
+            <div class="container-fluid p-0">
+
+                <div class="mb-3">
+                    <h1 class="h3 d-inline align-middle">Log Analysis</h1>
+
+                </div>
+                <div class="row">
+
+
+                    <div class="col-12 col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">Log Classification</h5>
+                                <h6 class="card-subtitle text-muted">Breakdown of the classifications in the Logs</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart chart-sm">
+                                    <canvas id="chartjs-doughnut"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">Pie Chart</h5>
+                                <h6 class="card-subtitle text-muted">Pie charts are excellent at showing the relational
+                                    proportions between data.</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart chart-sm">
+                                    <canvas id="chartjs-pie"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12">
+                        <div class="card flex-fill w-100">
+                            <div class="card-header">
+                                <h5 class="card-title">Line Chart</h5>
+                                <h6 class="card-subtitle text-muted">A line chart is a way of plotting data points on a
+                                    line.</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart">
+                                    <div id="slider"></div>
+                                    <canvas id="chartjs-line"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+                <div class="table-responsive">
+                    <h2>Filters</h2>
+                    <form method="GET" id="filters">
+
+                        <div class="row" style="">
+
+                            <div class="col-md-3 mb-3">
+                                <label for="classFilter" class="form-label">Filter by Class</label>
+                                <input type="text" id="classFilter" class="form-control" placeholder="Filter by Class"
+                                       value="{{ classification }}">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="priorityFilter" class="form-label">Filter by Priority</label>
+                                <input type="number" id="priorityFilter" class="form-control"
+                                       placeholder="Filter by Priority" value="{{ priority }}">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="logidFilter" class="form-label">Filter by Log ID</label>
+                                <input type="text" id="logidFilter" class="form-control" placeholder="Filter by Log Id"
+                                       value="{{ log_id }}">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="useridFilter" class="form-label">Filter by User ID</label>
+                                <input type="text" id="useridFilter" class="form-control"
+                                       placeholder="Filter by User Id" value="{{ user_id }}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label for="targetFilter" class="form-label">Filter by Target</label>
+                                <input type="text" id="targetFilter" class="form-control"
+                                       placeholder="Filter by target route" value="{{ target }}">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="detailFilter" class="form-label">Filter by Details</label>
+                                <input type="text" id="detailFilter" class="form-control"
+                                       placeholder="Filter by Details" value="{{ detail }}">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="sourceipFilter" class="form-label">Filter by Source IP</label>
+                                <input type="text" id="sourceipFilter" class="form-control"
+                                       placeholder="Filter by Source IP" value="{{ sourceip }}">
+                            </div>
+
+                        </div>
+
+                        <div class="row" style="margin-top: 10px;">
+                            <div class="col-md-6">
+                                <label for="timeFilter" class="form-label">Filter by Time</label>
+                                <div class="row">
+                                    <div class="col-7">
+                                        <input type="text" id="timeFilter" readonly class="form-control">
+                                        <div id="slider_time"></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top: 10px;">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary">Apply Filters</button>
+                            </div>
+                        </div>
+                        <hr>
+
+
+                    </form>
+
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-md-6">
+                            <button class="btn btn-primary btn-block fa-lg gradient-custom-2"><a
+                                    href="{{url_for('Sentinel_Routes.export_data')}}" style="color: white;">Export Logs</a></button>
+                        </div>
+                        <div class="col-md-6">
+<!--                            <div class="input-group">-->
+<!--                                <select id="logFileDropdown">-->
+<!--                                    <option value="">Select Log File</option>-->
+<!--                                    {% for filename in log_files %}-->
+<!--                                    <option value="{{ filename }}">{{ filename }}</option>-->
+<!--                                    {% endfor %}-->
+<!--                                </select>-->
+<!--                                <div class="input-group-append">-->
+<!--                                    <button id="downloadLogBtn"-->
+<!--                                            class="btn btn-primary btn-block fa-lg gradient-custom-2">-->
+<!--                                        Download Log File-->
+<!--                                    </button>-->
+<!--                                </div>-->
+<!--                            </div>-->
+                            <form method="POST" action="{{url_for('Sentinel_Routes.serve_log_file')}}">
+                                {{ logform.csrf_token}}
+                                <div class="input-group">
+                                {{ logform.log_file(class="form-control") }}
+                                <div class="input-group-append">
+                                    {{ logform.download_button(class="btn btn-primary fa-lg gradient-custom-2") }}
+                                </div>
+                            </div>
+                            </form>
+
+
+                        </div>
+                    </div>
+
+
+                    <br>
+                    <h1 id="event_count">Event Count: </h1>
+
+                    <form id="add_evirec_form"
+                          action="{{ url_for('Sentinel_Routes.add_evirec_path', username=current_user.get_username(), logged_in=current_user.is_authenticated)}}"
+                          method="POST" enctype="multipart/form-data">
+                        {{ createevirec.csrf_token}}
+                        <!--                    <input type="submit" value="Checkout" class="btn btn-dark">-->
+                        <button type="button" class="btn btn-dark" data-bs-toggle="modal"
+                                data-bs-target="#myModal_evirec_create" id="EVIREC_BUTTON">
+                            Add selected items to Evidence Path
+                        </button>
+                        <!-- Hidden input field for log IDs -->
+                        <input type="hidden" id="logIdsInput" name="log_ids" value="{{ log_ids_json }}">
+                        <div class="modal" id="myModal_evirec_create">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+
+                                    <!--                                Modal Header-->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Create Path</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+
+                                    <!--                                Modal Body-->
+                                    <div class="modal-body">
+                                        {% from "includes/_formHelper.html" import render_field %}
+                                        <div class="form-group">
+                                            {{ render_field(createevirec.path_name, class="form-control",
+                                            ) }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ render_field(createevirec.description, class="form-control",
+                                            ) }}
+                                        </div>
+
+
+                                        Are you sure you want to continue?
+                                    </div>
+
+                                    <!--                                Modal Footer-->
+                                    <div class="modal-footer">
+                                        <input type="submit" value="Create" class="btn btn-warning">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                            Cancel
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <table id="logTable" class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">Log_id</th>
+                            <th scope="col">User_id</th>
+                            <th scope="col">Class</th>
+                            <th scope="col">Priority</th>
+                            <th scope="col">Time</th>
+                            <th scope="col">Target</th>
+                            <th scope="col">Details</th>
+                            <th scope="col">Source IP</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for log in logs_pages.items %}
+                        <tr id="{{log.get_log_id()}}">
+                            <td>{{log.get_log_id()}}</td>
+                            <td>{{log.get_user_id()}}</td>
+                            <td>{{log.get_classification()}}</td>
+                            <td>{{log.get_priority()}}</td>
+                            <td>{{log.get_time()}}</td>
+                            <td>{{log.get_target()}}</td>
+                            <td>{{log.get_details()}}</td>
+                            <td>{{log.get_source_ip()}}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- Pagination controls -->
+                    <div class="pagination">
+                        {% if logs_pages.has_prev %}
+                        <a class="page-link"
+                           href="{{ url_for('Sentinel_Routes.get_developer_dashboard', username=current_user.get_username(), page=logs_pages.prev_num, start_date=start_date, end_date=end_date, priority=priority, classification=classification, log_id=log_id, user_id=user_id, target=target, detail=detail, sourceip=sourceip,) }}">Previous</a>
+                        {% else %}
+                        <span class="page-link disabled">Previous</span>
+                        {% endif %}
+
+                        {% for page in logs_pages.iter_pages() %}
+                        {% if page %}
+                        {% if logs_pages.page == page %}
+                        <span class="page-link current-page"
+                              style="color: white; background-color: black;">{{ page }}</span>
+                        {% else %}
+                        <a class="page-link"
+                           href="{{ url_for('Sentinel_Routes.get_developer_dashboard', username=current_user.get_username(), page=page, start_date=start_date, end_date=end_date, priority=priority, classification=classification, log_id=log_id, user_id=user_id, target=target, detail=detail, sourceip=sourceip,) }}">{{
+                            page }}</a>
+                        {% endif %}
+                        {% else %}
+                        <span class="ellipsis">...</span>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if logs_pages.has_next %}
+                        <a class="page-link"
+                           href="{{ url_for('Sentinel_Routes.get_developer_dashboard', username=current_user.get_username(), page=logs_pages.next_num, start_date=start_date, end_date=end_date, priority=priority, classification=classification, log_id=log_id, user_id=user_id, target=target, detail=detail, sourceip=sourceip,) }}">Next</a>
+                        {% else %}
+                        <span class="page-link disabled">Next</span>
+                        {% endif %}
+                    </div>
+
+
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row text-muted">
+                    <div class="col-6 text-start">
+                        <p class="mb-0">
+                            <a class="text-muted" href="" target="_blank"><strong>Sentinel</strong></a>
+                            &copy;
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js')}}"></script>
+<script src="
+https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js
+"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="{{ url_for('static', filename='js/evirec.js')}}"></script>
+<script src="{{ url_for('static', filename='js/logs_helper.js')}}"></script>
+
+<script>
+
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+			// Line chart
+
+
+			// create labels for data
+			//split by day
+			var date_labels = {{logs_dates | tojson}};
+
+			var linechart = new Chart(document.getElementById("chartjs-line"), {
+				type: "line",
+				data: {
+					labels: date_labels,
+					datasets: [{
+						label: "Event Count By Day",
+						fill: true,
+						backgroundColor: "transparent",
+						borderColor: window.theme.primary,
+						data: {{logs_date_count | tojson}}
+					},]
+				},
+				options: {
+					maintainAspectRatio: false,
+					legend: {
+						display: false
+					},
+					tooltips: {
+						intersect: false
+					},
+					hover: {
+						intersect: true
+					},
+					plugins: {
+						filler: {
+							propagate: false
+						}
+					},
+					scales: {
+						x: {
+							reverse: false,
+							grid: {
+								color: "rgba(0,0,0,0.05)"
+							}
+						},
+						y: {
+							ticks: {
+								stepSize: 500
+							},
+							display: true,
+							borderDash: [5, 5],
+							grid: {
+								color: "rgba(0,0,0,0)",
+								fontColor: "#fff"
+							}
+						}
+					}
+				}
+			});
+		});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+			// Doughnut chart
+			var chart = new Chart(document.getElementById("chartjs-doughnut"), {
+				type: "doughnut",
+				data: {
+					labels: {{logs_classes | tojson}},
+					datasets: [{
+						data: {{logs_count | tojson}},
+						backgroundColor: [
+							window.theme.primary,
+							window.theme.success,
+							window.theme.warning,
+							"#dee2e6"
+						],
+						borderColor: "transparent"
+					}]
+				},
+				options: {
+					maintainAspectRatio: false,
+					cutoutPercentage: 65,
+					legend: {
+						display: false
+					}
+				}
+			});
+		});
+
+
+       function updateChartClass() {
+        var logs_class = {{ logs_classes | tojson }};
+        var count = {{ logs_count | tojson }};
+
+        var classFilter = document.getElementById("classFilter").value;
+
+        var filteredData = [];
+        for (var i=0; i < logs_class.length; i++){
+            if (logs_class[i].includes(classFilter)) {
+                filteredData.push(count[i]);
+            } else {
+                filteredData.push(0);
+            }
+        }
+
+
+        var chartcanvas = document.getElementById("chartjs-doughnut");
+        var chart = Chart.getChart(chartcanvas);
+        chart.data.datasets[0].data = filteredData;
+        chart.update();
+       }
+
+
+document.addEventListener("DOMContentLoaded", function() {
+			// Pie chart
+			var piechart = new Chart(document.getElementById("chartjs-pie"), {
+				type: "pie",
+				data: {
+					labels: {{logs_priority | tojson}},
+					datasets: [{
+						data: {{logs_priority_count | tojson}},
+						backgroundColor: [
+							window.theme.primary,
+							window.theme.warning,
+							window.theme.danger,
+							"#dee2e6"
+						],
+						borderColor: "transparent"
+					}]
+				},
+				options: {
+					maintainAspectRatio: false,
+					legend: {
+						display: false
+					}
+				}
+			});
+		});
+
+		function updateChartPriority() {
+        var logs_priority = {{ logs_priority | tojson }};
+        var count = {{ logs_priority_count | tojson }};
+
+        var priorityFilter = document.getElementById("priorityFilter").value;
+
+        var filteredData = [];
+        for (var i=0; i < logs_priority.length; i++){
+            if (logs_priority[i].includes(priorityFilter)) {
+                filteredData.push(count[i]);
+            } else {
+                filteredData.push(0);
+            }
+        }
+
+
+        var chartcanvas = document.getElementById("chartjs-pie");
+        var piechart = Chart.getChart(chartcanvas);
+        piechart.data.datasets[0].data = filteredData;
+        piechart.update();
+       }
+
+
+
+
+
+
+
+
+
+
+
+
+function countVisibleLogs() {
+        var visibleRows = $('#logTable tbody tr.Included').length;
+        var totalRows = $('#logTable tbody tr').length;
+        var eventCount = $('#logTable tbody tr').filter(":visible").find('.event-count').length;
+        $('#event_count').text('Event Count: ' + {{total_logs_count}});
+    }
+
+function addIncludedRows(){
+
+    var rows = document.querySelectorAll("#logTable tbody tr");
+
+    for (var j = 0; j < rows.length; j++) {
+        var row = rows[j];
+
+        if (!row.classList.contains("Included")) {
+
+          row.classList.add("Included");
+        }
+    }
+}
+
+function checkIfIncluded(){
+    var rows = document.querySelectorAll("#logTable tbody tr");
+
+    for (var j = 0; j < rows.length; j++) {
+        var row = rows[j];
+
+        if (row.style.display == "none") {
+
+          row.classList.remove("Included");
+        } else {
+            row.classList.add("Included");
+        }
+    }
+
+}
+
+function filterTableByClassAndPriority() {
+  filterTableByClass();
+  filterTableByPriority();
+}
+
+$(document).ready(function() {
+    // Initial count
+    addIncludedRows();
+    countVisibleLogs();
+
+
+    // Event handler for table filtering or any action that changes the visibility of rows
+    $('#classFilter, #priorityFilter, #timeFilter').on('keyup', function() {
+
+        countVisibleLogs();
+    });
+
+
+});
+
+
+
+    function filterTableByClass() {
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("classFilter");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("logTable");
+  tr = table.getElementsByTagName("tr");
+
+  // get only the rows that are included
+  tr = document.querySelectorAll("#logTable tbody tr");
+
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[2]; // Assuming "Class" is the third column (index 2)
+
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+
+      } else {
+        tr[i].style.display = "none";
+
+      }
+    }
+  }
+}
+
+function filterTableByPriority() {
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("priorityFilter");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("logTable");
+  tr = table.getElementsByTagName("tr");
+
+  // get only the rows that are included
+  tr = document.querySelectorAll("#logTable tbody tr");
+
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[3]; // Assuming "Priority" is the fourth column (index 3)
+
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+
+      } else {
+        tr[i].style.display = "none";
+
+      }
+    }
+  }
+}
+
+
+
+    // must get logs model latest time
+    var minTime = "{{ original_logs_model[0].get_time() }}"; // Assuming logs_model is a list of LogsModel objects
+      var maxTime = "{{ original_logs_model[-1].get_time() }}"; // Assuming logs_model is a list of LogsModel objects
+      var startTime = "{{logs_model[0].get_time()}}";
+      var endTime = "{{logs_model[-1].get_time()}}";
+
+      $(function() {
+        $("#slider_time").slider({
+          range: true,
+          min: new Date(minTime).getTime(),
+          max: new Date(maxTime).getTime(),
+          step: 86400000, // One day in milliseconds
+          values: [new Date(startTime).getTime(), new Date(endTime).getTime()],
+          slide: function(event, ui) {
+            startTime = new Date(ui.values[0]).toISOString();
+            endTime = new Date(ui.values[1]).toISOString();
+            $("#timeFilter").val(startTime.slice(0, 10) + " - " + endTime.slice(0, 10));
+            updateLineChartTime();
+          }
+        });
+        $("#timeFilter").val(startTime.slice(0, 10) + " - " + endTime.slice(0, 10));
+        updateLineChartTime();
+      });
+
+
+    function filterTableByTime() {
+        var input, table, tr, td, timeColumn, i, txtValue;
+        input = document.getElementById("timeFilter");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("logTable");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, and hide those that don't match the filter
+        for (i = 0; i < tr.length; i++) {
+          timeColumn = tr[i].getElementsByTagName("td")[4]; // Assuming time is in the 5th column (index 4)
+          if (timeColumn) {
+            txtValue = timeColumn.textContent || timeColumn.innerText;
+            var logTime = new Date(txtValue).toISOString();
+            if (logTime >= startTime && logTime <= endTime) {
+              tr[i].style.display = "";
+              tr[i].classList.add("Included");
+
+            } else {
+              tr[i].style.display = "none";
+              tr[i].classList.remove("Included");
+            }
+          }
+        }
+
+        countVisibleLogs();
+      }
+
+ document.getElementById('filters').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        var start_date = startTime;
+        var end_date = endTime;
+        var priority = document.getElementById('priorityFilter').value;
+        var classification = document.getElementById('classFilter').value;
+        var log_id = document.getElementById('logidFilter').value;
+        var user_id = document.getElementById('useridFilter').value;
+        var target = document.getElementById('targetFilter').value;
+        var detail = document.getElementById('detailFilter').value;
+        var sourceip = document.getElementById('sourceipFilter').value;
+
+        if (!classification) {
+            classification = 'all';
+        }
+
+
+        var url = "{{ url_for('Sentinel_Routes.get_developer_dashboard',  username=current_user.get_username(), page=page) }}";
+        url += "&start_date=" + start_date + "&end_date=" + end_date + "&priority=" + priority + "&classification=" + classification;
+        url += "&log_id=" + log_id + "&user_id=" + user_id + "&target=" + target + "&detail=" + detail + "&sourceip=" + sourceip;
+
+
+        window.location.href = url;
+    });
+
+function filterTableByAll(){
+    var tr, priority, Class, classmatch, prioritymatch, TimeFilter, txtValue, logIDFilter, userIDFilter, targetFilter, detailFilter, logidMatch, useridMatch, targetMatch, detailsMatch;
+    tr = document.querySelectorAll("#logTable tbody tr"); //list of rows
+    priority = document.getElementById("priorityFilter").value.toUpperCase();
+    Class = document.getElementById("classFilter").value.toUpperCase();
+    TimeFilter = document.getElementById("timeFilter").value.toUpperCase();
+    logIDFilter = document.getElementById("logidFilter").value.toUpperCase();
+    userIDFilter = document.getElementById("useridFilter").value.toUpperCase();
+    targetFilter = document.getElementById("targetFilter").value.toUpperCase();
+    detailFilter = document.getElementById("detailFilter").value.toUpperCase();
+
+    for (i = 0; i < tr.length; i++) {
+        td_class = tr[i].getElementsByTagName("td")[2]; // Assuming "Class" is the third column (index 2)
+        td_priority = tr[i].getElementsByTagName("td")[3]; // Assuming "Priority" is the fourth column (index 3)
+        timeColumn = tr[i].getElementsByTagName("td")[4]; // Assuming time is in the 5th column (index 4)
+        td_logid = tr[i].getElementsByTagName("td")[0]; // Assuming logid is in the 1st column (index 0)
+        td_userid = tr[i].getElementsByTagName("td")[1]; // Assuming userid is in the 2nd column (index 1)
+        td_target = tr[i].getElementsByTagName("td")[5]; // Assuming target is in the 6th column (index 5)
+        td_details = tr[i].getElementsByTagName("td")[6]; // Assuming details is in the 7th column (index 6)
+
+        classmatch = td_class && td_class.innerHTML.toUpperCase().indexOf(Class) > -1;
+        prioritymatch = td_priority && td_priority.innerHTML.toUpperCase().indexOf(priority) > -1;
+        logidMatch = td_logid && td_logid.innerHTML.toUpperCase().indexOf(logIDFilter) > -1;
+        useridMatch = td_userid && td_userid.innerHTML.toUpperCase().indexOf(userIDFilter) > -1;
+        targetMatch = td_target && td_target.innerHTML.toUpperCase().indexOf(targetFilter) > -1;
+        detailsMatch = td_details && td_details.innerHTML.toUpperCase().indexOf(detailFilter) > -1;
+
+        txtValue = timeColumn.textContent || timeColumn.innerText;
+        var logTime = new Date(txtValue).toISOString(); //the actual datestring of the log entry
+
+        timematch = logTime >= startTime && logTime <= endTime;
+
+        if (classmatch && prioritymatch && timematch && timeColumn && logidMatch && useridMatch && targetMatch && detailsMatch){
+            tr[i].style.display = "";
+        } else {
+            tr[i].style.display = "none";
+        }
+
+  }
+  checkIfIncluded();
+  countVisibleLogs();
+}
+
+function updateLineChartTime(){
+    var log_dates = {{logs_dates | tojson}};
+    var log_dates_count = {{logs_date_count | tojson}};
+
+    var startTime = new Date($("#slider_time").slider("values", 0)).toISOString();
+    var endTime = new Date($("#slider_time").slider("values", 1)).toISOString();
+
+
+    var filteredData = [];
+    var filteredLabels = [];
+    for (var i=0; i < log_dates.length; i++){
+        var log_date = new Date(log_dates[i]).toISOString();
+
+        if (log_date >= startTime && log_date <= endTime){
+            filteredData.push(log_dates_count[i]);
+            filteredLabels.push(log_dates[i]);
+        } else {
+
+            filteredData.push(0);
+        }
+    }
+
+    var linechartcanvas = document.getElementById("chartjs-line");
+    var linechart = Chart.getChart(linechartcanvas);
+    linechart.data.labels = filteredLabels;
+    linechart.data.datasets[0].data = filteredData;
+    linechart.update();
+}
+
+function downloadLogFile() {
+    var selectedFilename = document.getElementById("logFileDropdown").value;
+    if (selectedFilename) {
+        var downloadLink = document.createElement("a");
+        downloadLink.href = "../static/log_reports/" + selectedFilename;
+        downloadLink.download = selectedFilename;
+        downloadLink.click();
+    }
+}
+
+
+
+
+
+</script>
+
+
+</body>
+
+</html>

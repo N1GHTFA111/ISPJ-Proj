@@ -1,0 +1,7 @@
+go to app.css
+ctrl f and search for sidebar-content and change the background 	#4e4e94
+to change sidebar link text: sidebar-link: background color #313178
+to change hover: change sidebar-link:hover background color 	#7474b0
+
+to change sidebar link active
+under css/stylingcss change the background

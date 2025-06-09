@@ -1,0 +1,59 @@
+{% extends 'dashboard_admin_base.html' %}
+
+{% block content %}
+<div class="container-fluid p-0">
+
+    <div class="mb-3">
+        <h1 class="h3 d-inline align-middle" id="page-identifier">IAM Roles</h1>
+
+    </div>
+    {% from "includes/_formHelper.html" import render_field %}
+
+
+    <div class="row" style="overflow:auto;">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Access Control Matrix</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover my-0">
+                        <thead>
+                        <tr>
+                            <th>Role Id</th>
+                            <th class="">rolename</th>
+                            <th class="">executive_permission</th>
+                            <th class="">manager_permission</th>
+                            <th class="">IT_permission</th>
+                            <th class="">employee_permission</th>
+                            <th class="">user_permission</th>
+
+
+                            <!--											<th class="d-none d-md-table-cell">Account Id</th>-->
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for role in rolemodel %}
+                        <tr>
+                            <td>{{role.get_id()}}</td>
+                            <td class="">{{role.get_rolename()}}</td>
+                            <td class="">{{role.get_executive_permission()}}</td>
+                            <td class="">{{role.get_manager_permission()}}</td>
+                            <td class="">{{role.get_IT_permission()}}</td>
+                            <td class="">{{role.get_employee_permission()}}</td>
+                            <td class="">{{role.get_user_permission()}}</td>
+
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock %}

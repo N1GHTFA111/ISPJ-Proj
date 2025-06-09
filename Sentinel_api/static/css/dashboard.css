@@ -1,0 +1,235 @@
+.brand-name {
+  font-size: 30px;
+}
+
+.green {
+    background-color: #5cb874; !important
+}
+
+.portals-toggle {
+  background-color: green;
+  /* background-color: red; */
+}
+
+.grey {
+  color: grey;
+}
+
+.text-grey {
+  color: grey;
+}
+
+.sidebar-dark-blue {
+  background-color: #EFEFEF;
+}
+
+.sidebar-width {
+  width: 300px;
+}
+
+.sidebar-height {
+  min-height: 100vh;
+}
+
+.current {
+  color: orange; !important
+}
+
+.searchbar_styles{
+  width: 70vw;
+}
+
+#search_users{
+width: 50vw;
+}
+
+/* .resize_icon{
+  height: 50px;
+} */
+
+.padding_icon{
+  margin: 10px;
+}
+
+.remove_hyperlink_decoration{
+  text-decoration: none;
+}
+
+.text_resize{
+  font-size: 35px;
+}
+
+.btn-margin{
+  margin-top: 40px;
+}
+
+.btn-resize {
+  height: 80px;
+  width: 200px;
+  font-size: 30px;
+}
+
+.centre{
+  margin-left: 600px;
+  margin-top: 250px;
+}
+
+.icon-move-right{
+  margin-left: 160px;
+}
+
+.centre_para{
+  margin-left: 740px;
+}
+
+.dropdown-move-right{
+    margin-left: 10%;
+}
+
+
+/*custom pc styles*/
+.resize_pc_img{
+    width: 250px;
+    height: auto;
+}
+
+.lengthen-input-destination-address{
+width: 70%;
+}
+
+
+.chatbot_background{
+background-color: grey;
+width: 0.25vw;
+height: 0.5vh;
+}
+
+.move-right-chatbot{
+position: absolute;
+z-index: 1;
+margin-left: 85%;
+margin-top: 45%;
+}
+
+.enlarge_3d {
+width: 75%;
+height: 75%;
+}
+
+header {
+  position: fixed;
+  width: 100vw;
+  top: 0;
+  z-index: 3;
+}
+
+#sidebarMenu {
+  min-height: 100vh !important;
+  position: fixed;
+  z-index: 2;
+  /* width: 300px !important; */
+  /* overflow-y: scroll; */
+  overflow: auto;
+  top: 0;
+  bottom: 0;
+  margin-top: 72px;
+  padding-bottom: 100px;
+}
+
+main {
+  padding-top: 100px;
+}
+
+table {
+  overflow: auto;
+}
+
+.bg-custom {
+  opacity: 85%;
+}
+
+.card {
+    box-shadow: rgba(0,0,0,0.2) 0px 3px 8px;
+}
+
+.transparent {
+    background-color: white !important;
+}
+
+.bg-image{
+    width: 100%;
+    height: 15vw;
+    object-fit: cover;
+}
+
+.img-size{
+    height: 35vh;
+    width: auto;
+}
+
+.img-size-custom-pc{
+    height: 50vh;
+    width: auto;
+}
+
+.img-size-home{
+    height: 50vh;
+    width: auto;
+}
+
+
+.remove_decoration{
+    text-decoration: none !important;
+}
+
+.card_decoration_body{
+text-decoration: none !important;
+
+}
+
+.extend-height{
+    height: 50%;
+}
+
+.remove_bullet {
+    list-style:none;
+}
+
+.add-padding{
+    padding-top: 50px;
+}
+
+.gradient-form{
+    background-image: url("../media/gplay.png");
+    opacity: 100%;
+    background-attachment: fixed; !important
+    height: 100vh + 2500px;
+    overflow-y: scroll;
+}
+
+.gradient-custom-2 {
+/* fallback for old browsers */
+    background: #46aa8e;
+
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, rgba(70,170,142,1), rgba(114,175,211,1));
+
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, rgba(70,170,142,1), rgba(114,175,211,1))
+}
+
+#search_inventory{
+    width: 50vw;
+}
+
+#search_parts{
+    width: 50vw;
+}
+
+#search_accessories{
+    width: 50vw;
+}
+
+.padding-bottom{
+    padding-bottom: 70px;
+}

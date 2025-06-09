@@ -1,0 +1,191 @@
+{% extends 'dashboard_admin_base.html' %}
+
+{% block content %}
+<div class="container-fluid p-0">
+
+    <div class="mb-3">
+        <h1 class="h3 d-inline align-middle" id="page-identifier">Evidence Reconstruction Paths</h1>
+        <br>
+        <h3 class="h3 d-inline align-middle">To add a path, go to the Logs page and click on any number of log
+            entries</h3>
+    </div>
+    <div class="row" style="overflow:auto;">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">EVIREC PATHS</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover my-0">
+                        <thead>
+
+                        <th>Evi-Rec Path Name</th>
+                        <th>Owner</th>
+                        <th>Time Created</th>
+                        <th>Latest Time Updated</th>
+                        <th>Description</th>
+
+                        </thead>
+
+                        {% for evirec in evirec_model %}
+                        <tr>
+                            <td>{{evirec.get_path_name()}}</td>
+                            <td>{{evirec.get_user_who_added()}}</td>
+                            <td>{{evirec.get_time()}}</td>
+                            <td>{{evirec.get_time_updated()}}</td>
+                            <td>{{evirec.get_description()}}</td>
+                            <td>
+                                <form action="{{ url_for('Sentinel_Routes.view_evirec_paths', username=current_user.get_username(), logged_in=current_user.is_authenticated,  evirec_pathname=evirec.get_path_name())}}"
+                                      method="POST" enctype="multipart/form-data">
+                                    {{ updateevirec.csrf_token}}
+                                    <!--                    <input type="submit" value="Checkout" class="btn btn-dark">-->
+                                    <button type="button" class="btn btn-dark" data-bs-toggle="modal"
+                                            data-bs-target="#myModal_{{evirec.get_path_name()}}_viewPath">
+                                        View Evirec Path
+                                    </button>
+                                    <div class="modal" id="myModal_{{evirec.get_path_name()}}_viewPath">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+
+                                                <!--                                Modal Header-->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Path: {{evirec.get_path_name()}}</h4><br>
+
+                                                    <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <!--                                Modal Body-->
+                                                <div class="modal-body">
+                                                    <div class="row" style="overflow:auto;">
+                                                        <h6>Description: {{evirec.get_description()}}</h6>
+                                                        <div class="table-responsive">
+                                                            <table class="table table-hover my-0">
+                                                                <thead>
+                                                                <th scope="col">Log_id</th>
+                                                                <th scope="col">User_id</th>
+                                                                <th scope="col">Class</th>
+                                                                <th scope="col">Priority</th>
+                                                                <th scope="col">Time</th>
+                                                                <th scope="col">Target</th>
+                                                                <th scope="col">Details</th>
+                                                                <th scope="col">Source IP</th>
+
+
+                                                                </thead>
+
+                                                                {% for evirec_entry in
+                                                                get_all_evirec_of_pathname(evirec.get_path_name()) %}
+                                                                <tr>
+                                                                    <td>{{get_log_evirec_helper(evirec_entry.get_log_id()).get_log_id()}}</td>
+                                                                    <td>{{get_log_evirec_helper(evirec_entry.get_log_id()).get_user_id()}}</td>
+                                                                    <td>{{get_log_evirec_helper(evirec_entry.get_log_id()).get_classification()}}</td>
+                                                                    <td>{{get_log_evirec_helper(evirec_entry.get_log_id()).get_priority()}}</td>
+                                                                    <td>{{get_log_evirec_helper(evirec_entry.get_log_id()).get_time()}}</td>
+                                                                    <td>{{get_log_evirec_helper(evirec_entry.get_log_id()).get_target()}}</td>
+                                                                    <td>{{get_log_evirec_helper(evirec_entry.get_log_id()).get_details()}}</td>
+                                                                    <td>{{get_log_evirec_helper(evirec_entry.get_log_id()).get_source_ip()}}</td>
+                                                                    <td>
+                                                                        <form action="{{ url_for('Sentinel_Routes.delete_evirec_item', username=current_user.get_username(), logged_in=current_user.is_authenticated,  evirec_id=evirec_entry.get_evirec_id()) }}"
+                                                                              method="POST">
+                                                                            <input type="hidden" name="csrf_token"
+                                                                                   value="{{ csrf_token() }}">
+                                                                            <!--                    <input type="submit" value="Delete" class="btn btn-danger">-->
+                                                                            <input type="submit" value="Delete"
+                                                                                   class="btn btn-danger">
+
+
+                                                                        </form>
+                                                                    </td>
+
+                                                                </tr>
+                                                                {% endfor %}
+
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    {% from "includes/_formHelper.html" import render_field %}
+                                                    <div class="form-group">
+                                                        {{ render_field(updateevirec.path_name, class="form-control",
+                                                        ) }}
+                                                    </div>
+                                                    <div class="form-group">
+                                                        {{ render_field(updateevirec.description, class="form-control",
+                                                        ) }}
+                                                    </div>
+
+
+                                                    Are you sure you want to continue?
+                                                </div>
+
+                                                <!--                                Modal Footer-->
+                                                <div class="modal-footer">
+                                                    <input type="submit" value="Update" class="btn btn-warning">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">
+                                                        Cancel
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </td>
+                            <td>
+                                <form action="{{ url_for('Sentinel_Routes.delete_evirec_path', username=current_user.get_username(), logged_in=current_user.is_authenticated,  evirec_path=evirec.get_path_name()) }}"
+                                      method="POST">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <!--                    <input type="submit" value="Delete" class="btn btn-danger">-->
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                            data-bs-target="#myModal_{{evirec.get_path_name()}}_deleteEvirec">
+                                        Delete
+                                    </button>
+                                    <!--                    Modal-->
+                                    <div class="modal fade" id="myModal_{{evirec.get_path_name()}}_deleteEvirec"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+
+                                                <!--                                Modal Header-->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Delete Confirmation</h4>
+                                                    <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <!--                                Modal Body-->
+                                                <div class="modal-body">
+                                                    Are you sure you want to delete this path?
+                                                </div>
+
+                                                <!--                                Modal Footer-->
+                                                <div class="modal-footer">
+                                                    <input type="submit" value="Delete" class="btn btn-danger">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Cancel
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+
+
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,330 @@
+/* Login Page */
+
+a:hover {
+    color: #6A6A6A;
+}
+
+.gradient-form{
+    background-image: url("../media/gplay.png");
+    background-color: #486898;
+    opacity: 100%;
+    background-attachment: fixed; !important
+    height: 100vh + 2500px;
+    overflow-y: scroll;
+}
+
+.gradient-custom-2 {
+/* fallback for old browsers */
+    background: #449CFD;
+
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, rgba(70,170,142,1), rgba(114,175,211,1));
+
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(90deg, hsla(204, 100%, 73%, 1) 0%, hsla(207, 90%, 42%, 1) 100%);
+}
+
+.padding-bottom {
+
+  padding-top: 10%;
+  padding-bottom: 10%;
+}
+
+a {
+  text-decoration: none;
+
+}
+
+.dark-text {
+  color: white;
+}
+
+.subcontainer {
+background: #449CFD;
+margin-top: 3%;
+margin-bottom: 3%;
+margin-right: 4%;
+margin-left: 4%;
+border-radius: 25px;
+display: inline-block;
+}
+
+.registration_container{
+ float: right;
+}
+
+
+
+.colored {
+  /* background-image: linear-gradient(to bottom right, #5328c2, #a029ee); */
+  background: linear-gradient(-70deg, #F1173F, #5328c2, #a029ee, #F1173F);
+  /* background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab); */
+  /* background-image: url("media/index_top_photo.jpg"); */
+  background-size: 200% 200%;
+  color: white;
+  /* animation: gradient 10s ease infinite; */
+  height: 100vh;
+  animation-name: gradient;
+  animation-duration: 10s;
+  animation-timing-function: ease;
+  animation-iteration-count: infinite;
+  /* animation: gradient 5s timing-function delay iteration-count direction fill-mode; */
+
+}
+
+/* LIVE GRADIENT SECTION */
+@keyframes gradient{
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
+.img_make_smaller{
+    position: absolute;
+    z-index: -1;
+    width: 70%;
+    height: auto;
+
+}
+
+.img_make_smaller_register{
+    width: 35%;
+    height: auto;
+    position: absolute;
+    z-index: -1;
+    margin-left: 20%;
+    margin-top: 10%;
+
+}
+
+
+.login_float_right{
+    float: right;
+    margin-top: 10%;
+    padding-right: 20%;
+    right: 5%
+}
+
+.register_float_right{
+    float: right;
+    margin-top: 10%;
+    padding-right: 20%;
+    margin-bottom: 10%;
+}
+
+.text-align-center {
+text-align: center;
+}
+
+.style_input {
+   padding-bottom: 5%;
+
+}
+
+.style_input_ver2{
+padding-bottom: 2%;
+width: 15%;
+}
+
+
+
+.change_text_color_forget_pw{
+color: white;
+
+}
+.change_text_color_forget_pw:hover{
+color: grey;}
+
+
+.enlarge_txt{
+font-size: 500%;
+}
+
+.input-margin-bottom{
+margin-bottom: 10%;
+margin-left: 7%;
+}
+
+.input-margin-bottom-admin{
+margin-bottom: 10%;
+margin-left: 14%;
+}
+
+.move-right{
+margin-left: 27%;}
+
+.not-colored {
+  margin-top: 10px;
+}
+
+/* NAVBAR  */
+.nav-item {
+  padding: 0 20px;
+}
+
+.Nav-bar {
+  font-size: 20px;
+}
+
+.navbar {
+  padding: 0 0 4.5rem;
+}
+
+.navbar-brand {
+  font-size: 4vw !important;
+  font-weight: bold;
+
+}
+
+/* FIRST PAGE */
+.container-fluid {
+
+}
+
+.container-padding{
+    padding: 3% 15% 20%;
+}
+
+
+#title_section {
+  max-height: 1200px;
+  height: 100%;
+}
+
+.big-header {
+  font-size: 2.5vw;
+  line-height: 1.5;
+}
+
+.download-button {
+  margin: 5% 4% 5% 0;
+}
+
+.index_top_photo {
+  width: 120%;
+  height: auto;
+
+}
+
+#modules_section{
+  margin-bottom: 100px;
+}
+
+.main_page_button{
+  color: white;
+  text-decoration: none !important;
+}
+
+.add_margin{
+    padding-left: 20px;
+    padding-bottom: 20px;
+}
+
+/* FOOTER */
+
+footer {
+  z-index: -2;
+}
+
+.footer_background {
+  background-image: linear-gradient(-60deg, #5328c2, #a029ee, #F1173F);
+  opacity: 85%;
+}
+
+.footer_size {
+  /* font-size: 25px; */
+  padding-top: 30px;
+  text-align: center;
+  color: white;
+  position: absolute;
+  margin-bottom: -50px;
+  width: 100%;
+  padding-bottom: 40px;
+}
+
+.fa {
+  color: white;
+  font-size: 20px;
+  padding: 10px;
+  text-decoration: none;
+
+}
+
+.fa:hover {
+  color: grey;
+}
+
+.resize_fa {
+  font-size: 45px;
+}
+
+.make_center{
+  margin: auto;
+}
+
+.margin-right{
+  margin-left: 60px;
+}
+
+.footer_phone_number{
+  padding-left: 170px;
+}
+
+.resize_carousel_header{
+  font-size: 25px;
+}
+
+
+
+
+
+/* RESPONSIVE LAYOUT SECTION */
+
+/* login page */
+@media (min-width: 768px){
+    .gradient-form {
+        height: 100vh !important;
+    }
+}
+
+@media (min-width: 769px){
+    .gradient-custom-2{
+        border-top-right-radius: .3rem;
+        border-bottom-right-radius: .3rem;
+    }
+}
+
+@media screen and (max-width: 1500px){
+  .big-header{
+    font-size: 8vw;
+    line-height: 1.5;
+  }
+}
+
+@media screen and (max-width: 1290px){
+  .big-header{
+    font-size: 3vw;
+    line-height: 1.5;
+  }
+}
+
+@media screen and (max-width: 1000px){
+  .big-header{
+    font-size: 8vw;
+    line-height: 1.5;
+  }
+}
+
+@media screen and (max-width: 280px){
+  #title_section {
+    max-height: 1600px;
+    height: 100%;
+  }
+}

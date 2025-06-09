@@ -1,0 +1,242 @@
+{% extends 'dashboard_admin_base.html' %}
+
+{% block content %}
+<div class="container-fluid p-0">
+
+    <div class="mb-3">
+        <h1 class="h3 d-inline align-middle" id="page-identifier">Secure Storage Center</h1>
+
+    </div>
+    {% from "includes/_formHelper.html" import render_field %}
+    <form action="{{ url_for('Sentinel_Routes.createBucket', username=current_user.get_username(), logged_in=current_user.is_authenticated) }}"
+          method="POST" enctype="multipart/form-data">
+        {{ createform.csrf_token }}
+
+        <!--                    <input type="submit" value="Checkout" class="btn btn-dark">-->
+        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#createProduct">
+            Create New Bucket
+        </button>
+        <div class="modal" id="createProduct">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <!--                                Modal Header-->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Create Bucket</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!--                                Modal Body-->
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            {{ render_field(createform.name, class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(createform.days_to_archive, class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(createform.days_to_permanent_deletion, class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(createform.availability, class="form-control") }}
+                        </div>
+
+
+
+                        Are you sure you want to continue?
+                    </div>
+
+                    <!--                                Modal Footer-->
+                    <div class="modal-footer">
+                        <input type="submit" value="Create" class="btn btn-warning">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="row" style="overflow:auto;">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">All Buckets</h5>
+            </div>
+            <div class="card-header">
+                <h5 class="card-title mb-0">Owned Buckets</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover my-0">
+                        <thead>
+                        <tr>
+                            <th>Bucket Name</th>
+                            <th class="">Availability</th>
+                            <th class="">Period in days to recover before deletion</th>
+                            <th class="">Time to retain after deleting</th>
+                            <!--											<th class="d-none d-md-table-cell">Account Id</th>-->
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for bucket in bucketmodel %}
+                        <tr>
+                            <td>{{bucket.get_name()}}</td>
+                            <td class="">{{bucket.get_availability()}}</td>
+                            <td class="">{{bucket.get_lifecycle_policy().get_days_to_archive()}}</td>
+                            <td class="">{{bucket.get_lifecycle_policy().get_days_to_permanent_deletion()}}</td>
+                            {% if bucket.get_availability() == "Public" %}
+                            <td>
+                                <form action="{{ url_for('Sentinel_Routes.get_buckets_by_user', username=current_user.get_username(), logged_in=current_user.is_authenticated, bucket_id=bucket.id)}}"
+                                      method="POST" enctype="multipart/form-data">
+                                    {{ updateACLform.csrf_token}}
+                                    <!--                    <input type="submit" value="Checkout" class="btn btn-dark">-->
+                                    <button type="button" class="btn btn-dark" data-bs-toggle="modal"
+                                            data-bs-target="#myModal_{{bucket.get_name()}}_viewPath">
+                                        View Share List
+                                    </button>
+                                    <div class="modal" id="myModal_{{bucket.get_name()}}_viewPath">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+
+                                                <!--                                Modal Header-->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Bucket: {{bucket.get_name()}}</h4><br>
+
+                                                    <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <!--                                Modal Body-->
+                                                <div class="modal-body">
+                                                    <div class="row" style="overflow:auto;">
+                                                        <h6>Share List</h6>
+                                                        <div class="table-responsive">
+                                                            <table class="table table-hover my-0">
+                                                                <thead>
+                                                                <th scope="col">email</th>
+
+
+
+                                                                </thead>
+
+                                                                {% for email in
+                                                                get_all_email_of_bucket(bucket.id) %}
+                                                                <tr>
+                                                                    <td>{{email.get_email()}}</td>
+                                                                    <td>
+                                                                        <form action="{{ url_for('Sentinel_Routes.delete_email_item', username=current_user.get_username(), logged_in=current_user.is_authenticated, acl_id=email.id) }}"
+                                                                              method="POST">
+                                                                            <input type="hidden" name="csrf_token"
+                                                                                   value="{{ csrf_token() }}">
+                                                                            <!--                    <input type="submit" value="Delete" class="btn btn-danger">-->
+                                                                            <input type="submit" value="Delete"
+                                                                                   class="btn btn-danger">
+
+
+                                                                        </form>
+                                                                    </td>
+
+                                                                </tr>
+                                                                {% endfor %}
+
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    {% from "includes/_formHelper.html" import render_field %}
+                                                    <div class="form-group">
+                                                        {{ render_field(updateACLform.email, class="form-control",
+                                                        ) }}
+                                                    </div>
+
+
+
+                                                    Are you sure you want to continue?
+                                                </div>
+
+                                                <!--                                Modal Footer-->
+                                                <div class="modal-footer">
+                                                    <input type="submit" value="Update" class="btn btn-warning">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">
+                                                        Cancel
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </td>
+                            {% else %}
+                            <td></td>
+                            {% endif %}
+                            <td>
+                                <a href="{{ url_for('Sentinel_Routes.deleteBucket', bucket_id=bucket.id, username=current_user.get_username(), logged_in=current_user.is_authenticated) }}"
+                                   class="btn btn-warning">Delete</a>
+                            </td>
+                            <td>
+                                <form action="{{ url_for('Sentinel_Routes.backup_bucket_files', username=current_user.get_username(), logged_in=current_user.is_authenticated, bucket_id=bucket.id) }}"
+                                      method="POST">
+                                    <input type="hidden" name="csrf_token"
+                                           value="{{ csrf_token() }}">
+                                    <!--                    <input type="submit" value="Delete" class="btn btn-danger">-->
+                                    <input type="submit" value="Backup"
+                                           class="btn btn-danger">
+
+
+                                </form>
+                            </td>
+
+
+
+
+
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div class="card-header">
+                <h5 class="card-title mb-0">Shared Buckets</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover my-0">
+                        <thead>
+                        <tr>
+                            <th>Bucket Name</th>
+                            <th class="">Availability</th>
+                            <th class="">Period in days to recover before deletion</th>
+                            <th class="">Time to retain after deleting</th>
+                            <!--											<th class="d-none d-md-table-cell">Account Id</th>-->
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for bucket in sharedbucketmodel %}
+                        <tr>
+                            <td>{{bucket.get_name()}}</td>
+                            <td class="">{{bucket.get_availability()}}</td>
+                            <td class="">{{bucket.get_lifecycle_policy().get_days_to_archive()}}</td>
+                            <td class="">{{bucket.get_lifecycle_policy().get_days_to_permanent_deletion()}}</td>
+
+
+
+
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock %}

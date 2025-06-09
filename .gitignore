@@ -1,0 +1,50 @@
+# --- Python Bytecode ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Virtual Environment ---
+venv/
+env/
+
+# --- Environment Secrets ---
+*.env
+.env.*
+*.ini
+
+# --- Certificates / Keys ---
+*.pem
+
+# --- PDFs / Reports (sensitive outputs) ---
+*.pdf
+
+# --- Backups / Archives ---
+*.zip
+*.tar.gz
+*.rar
+
+# --- Logs and Debug ---
+*.log
+
+# --- Editor / IDE Config ---
+.vscode/
+.idea/
+*.sublime-*
+
+# --- OS Specific Files ---
+.DS_Store
+Thumbs.db
+
+# --- Testing / Coverage ---
+.coverage
+.tox/
+.nox/
+.cache/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+htmlcov/
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+

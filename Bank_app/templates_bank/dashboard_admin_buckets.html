@@ -1,0 +1,51 @@
+{% extends 'dashboard_admin_base.html' %}
+
+{% block content %}
+<div class="container-fluid p-0">
+
+    <div class="mb-3">
+        <h1 class="h3 d-inline align-middle" id="page-identifier">Secure Storage Center</h1>
+
+    </div>
+    {% from "includes/_formHelper.html" import render_field %}
+    <div class="row" style="overflow:auto;">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">All Buckets</h5>
+            </div>
+            <div class="card-header">
+                <h5 class="card-title mb-0">Available Buckets</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover my-0">
+                        <thead>
+                        <tr>
+                            <th>Bucket Name</th>
+                            <th class="">Period in days to recover before deletion</th>
+                            <th class="">Time to retain after deleting</th>
+                            <!--											<th class="d-none d-md-table-cell">Account Id</th>-->
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for bucket in bucketmodel %}
+                        <tr>
+                            <td>{{bucket.get_name()}}</td>
+                            <td class="">{{bucket.get_lifecycle_policy().get_days_to_archive()}}</td>
+                            <td class="">{{bucket.get_lifecycle_policy().get_days_to_permanent_deletion()}}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock %}

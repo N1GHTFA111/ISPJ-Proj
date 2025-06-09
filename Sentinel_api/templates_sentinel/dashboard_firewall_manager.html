@@ -1,0 +1,162 @@
+{% extends 'dashboard_admin_base.html' %}
+
+{% block content %}
+<div class="container-fluid p-0">
+
+    <div class="mb-3">
+        <h1 class="h3 d-inline align-middle" id="page-identifier">Firewall Management Center</h1>
+
+    </div>
+    {% from "includes/_formHelper.html" import render_field %}
+    <form action="{{ url_for('Sentinel_Routes.get_firewall_manager_dashboard', username=current_user.get_username(), logged_in=current_user.is_authenticated) }}"
+          method="POST" enctype="multipart/form-data">
+        {{ addRuleForm.csrf_token }}
+
+        <!--                    <input type="submit" value="Checkout" class="btn btn-dark">-->
+        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#createProduct">
+            Create New Rule
+        </button>
+        <div class="modal" id="createProduct">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <!--                                Modal Header-->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Create Rule</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!--                                Modal Body-->
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            {{ render_field(addRuleForm.ip, class="form-control") }}
+                        </div>
+
+
+
+
+                        Are you sure you want to continue?
+                    </div>
+
+                    <!--                                Modal Footer-->
+                    <div class="modal-footer">
+                        <input type="submit" value="Create" class="btn btn-warning">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="row" style="overflow:auto;">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">All Firewall Rules</h5>
+            </div>
+            <div class="card-header">
+                <h5 class="card-title mb-0">Blocklist</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover my-0">
+                        <thead>
+                        <tr>
+                            <th>Blocked IP</th>
+                            <th class="">Date of Addition</th>
+                            <th>Last Updated On</th>
+
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for rule in rulesmodel %}
+                        <tr>
+                            <td>{{rule.block_ip}}</td>
+                            <td class="">{{rule.time_of_add}}</td>
+                             <td class="">{{rule.time_of_update}}</td>
+                            <td>
+                                <form action="{{ url_for('Sentinel_Routes.update_firewall_rule', username=current_user.get_username(), rule_id=rule.id) }}"
+                                      method="POST">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <!--                    <input type="submit" value="Delete" class="btn btn-danger">-->
+                                    <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                                            data-bs-target="#myModal_{{rule.id}}_updateUser">
+                                        Update
+                                    </button>
+                                    <!--                    Modal-->
+                                    <div class="modal fade" id="myModal_{{rule.id}}_updateUser"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+
+                                                <!--                                Modal Header-->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Update Confirmation</h4>
+                                                    <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <!--                                Modal Body-->
+                                                <div class="modal-body">
+                                                     <div class="form-group">
+                                                        {{ render_field(updateRuleForm.ip, class="form-control",
+                                                        value=rule.block_ip) }}
+                                                    </div>
+
+
+
+                                                    Are you sure you want to continue?
+                                                </div>
+
+                                                <!--                                Modal Footer-->
+                                                <div class="modal-footer">
+                                                    <input type="submit" value="Update" class="btn btn-danger">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Cancel
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+
+                            </td>
+
+                            <td>
+                                <form action="{{ url_for('Sentinel_Routes.delete_firewall_rule', username=current_user.get_username(), logged_in=current_user.is_authenticated, rule_id=rule.id) }}"
+                                      method="POST">
+                                    <input type="hidden" name="csrf_token"
+                                           value="{{ csrf_token() }}">
+                                    <!--                    <input type="submit" value="Delete" class="btn btn-danger">-->
+                                    <input type="submit" value="Delete"
+                                           class="btn btn-danger">
+
+
+                                </form>
+                            </td>
+
+
+
+
+
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock %}

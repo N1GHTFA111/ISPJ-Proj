@@ -1,0 +1,162 @@
+{% extends 'dashboard_admin_base.html' %}
+
+{% block content %}
+<div class="container-fluid p-0">
+
+    <div class="mb-3">
+        <h1 class="h3 d-inline align-middle" id="page-identifier">IAM Users</h1>
+
+    </div>
+    {% from "includes/_formHelper.html" import render_field %}
+    <div class="row" style="overflow:auto;">
+
+            <!--							<div class="col-12 col-lg-8 col-xxl-9 d-flex">-->
+            <div class="card">
+                <div class="card-header">
+
+                    <h5 class="card-title mb-0">User List</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+
+                    <table class="table table-hover my-0">
+                        <thead>
+                        <tr>
+                            <th>User Id</th>
+                            <th class="">Username</th>
+                            <th class="">Email</th>
+                          <th class="">Phone</th>
+                            <th class="">Role</th>
+                            <th class="">Access</th>
+
+
+                            <!--											<th class="d-none d-md-table-cell">Account Id</th>-->
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for user in iamusermodel %}
+                        <tr>
+                            <td>{{mask_iam_user_id(user.get_id())}}</td>
+                            <td class="">{{user.get_username()}}</td>
+                            <td class="">{{user.get_email()}}</td>
+                            <td class="">{{phone_mask_first_6(user.get_phone())}}</td>
+                            {% if user.get_role() == "EXECUTIVE" %}
+                            <td><span class="badge bg-danger">{{user.get_role()}}</span></td>
+                            {% elif user.get_role() == "USER" %}
+                            <td><span class="badge bg-success">{{user.get_role()}}</span></td>
+                            {% else %}
+                            <td><span class="badge bg-warning">{{user.get_role()}}</span></td>
+                            {% endif %}
+                            {% if user.get_role() == "USER" %}
+                            <td></td>
+                            {% elif iamAccessGiven(user.get_email()) %}
+                            <td>
+                                <form action="{{ url_for('Sentinel_Routes.remove_IAM_user_developer_access', email=user.get_email(), username=current_user.get_username()) }}"
+                                  method="POST">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                                <!--                    <input type="submit" value="Delete" class="btn btn-danger">-->
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                        data-bs-target="#myModal_{{user.get_id()}}_iamRemoveUser">
+                                    Remove Access
+                                </button>
+                                <!--                    Modal-->
+                                <div class="modal fade" id="myModal_{{user.get_id()}}_iamRemoveUser" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+
+                                            <!--                                Modal Header-->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">IAM Access Removal Confirmation</h4>
+                                                <button type="button" class="btn-close"
+                                                        data-bs-dismiss="modal"></button>
+                                            </div>
+
+                                            <!--                                Modal Body-->
+                                            <div class="modal-body">
+                                                Are you sure you want to disable this user access?
+                                            </div>
+
+                                            <!--                                Modal Footer-->
+                                            <div class="modal-footer">
+                                                <input type="submit" value="Deactivate" class="btn btn-danger">
+                                                <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Cancel
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            </td>
+                            {% else %}
+                            <td>
+
+                            <form action="{{ url_for('Sentinel_Routes.get_IAM_user_developer_access', email=user.get_email(), username=current_user.get_username()) }}"
+                                  method="POST">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                                <!--                    <input type="submit" value="Delete" class="btn btn-danger">-->
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                        data-bs-target="#myModal_{{user.get_id()}}_iamAddUser">
+                                    Activate Access
+                                </button>
+                                <!--                    Modal-->
+                                <div class="modal fade" id="myModal_{{user.get_id()}}_iamAddUser" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+
+                                            <!--                                Modal Header-->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">IAM Access Confirmation</h4>
+                                                <button type="button" class="btn-close"
+                                                        data-bs-dismiss="modal"></button>
+                                            </div>
+
+                                            <!--                                Modal Body-->
+                                            <div class="modal-body">
+                                                Are you sure you want to give this user access?
+                                            </div>
+
+                                            <!--                                Modal Footer-->
+                                            <div class="modal-footer">
+                                                <input type="submit" value="Activate" class="btn btn-danger">
+                                                <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Cancel
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            </td>
+                            {% endif %}
+
+
+
+
+
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                        <!-- Pagination Links -->
+
+                    </table>
+
+                </div>
+                </div>
+            </div>
+
+
+
+
+
+
+        </div>
+
+
+    </div>
+
+{% endblock %}

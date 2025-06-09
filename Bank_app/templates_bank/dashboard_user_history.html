@@ -1,0 +1,136 @@
+{% extends 'dashboard_user_base.html' %}
+
+{% block content %}
+<div class="container-fluid p-0">
+
+    <div class="mb-3">
+        <h1 class="h3 d-inline align-middle">Transaction History</h1>
+
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+        <div class="alert {% if category == 'success' %}alert-success{% elif category == 'error' %}alert-danger{% endif %} alert-dismissible fade show" role="alert">
+            <strong>{{ message }}</strong>
+
+        </div>
+    {% endfor %}
+{% endwith %}
+
+    {% from "includes/_formHelper.html" import render_field %}
+    <form action="{{ url_for('Bank_Routes.download_bank_statement', username=current_user.get_username(), logged_in=current_user.is_authenticated) }}"
+          method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <!--                    <input type="submit" value="Checkout" class="btn btn-dark">-->
+        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#createProduct">
+            Download Statement
+        </button>
+        <div class="modal" id="createProduct">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <!--                                Modal Header-->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Download Statement</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!--                                Modal Body-->
+                    <div class="modal-body">
+
+
+
+
+
+
+                        Are you sure you want to continue?
+                    </div>
+
+                    <!--                                Modal Footer-->
+                    <div class="modal-footer">
+                        <input type="submit" value="Create" class="btn btn-warning">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+    <br>
+    <form action="{{ url_for('Bank_Routes.verify_bank_statement', username=current_user.get_username(), logged_in=current_user.is_authenticated) }}"
+          method="POST" enctype="multipart/form-data">
+        {{ fileform.csrf_token }}
+        <!--                    <input type="submit" value="Checkout" class="btn btn-dark">-->
+        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#verifyProduct">
+            Verify Statement
+        </button>
+        <div class="modal" id="verifyProduct">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <!--                                Modal Header-->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Verify Statement</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!--                                Modal Body-->
+                    <div class="modal-body">
+                     <div class="form-group">
+                            {{ render_field(fileform.file, class="form-control") }}
+                        </div>
+
+
+
+
+
+                        Are you sure you want to continue?
+                    </div>
+
+                    <!--                                Modal Footer-->
+                    <div class="modal-footer">
+                        <input type="submit" value="Create" class="btn btn-warning">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-hover my-0">
+                <thead>
+                <th>Time</th>
+                <th>Source Username</th>
+                <th>Destination Username</th>
+                <th>Amount</th>
+                <th>Type</th>
+
+
+                </thead>
+
+                {% for entry in transaction_model %}
+                <tr>
+                    <td>{{entry.get_time()}}</td>
+                    <td>{{entry.get_src_username()}}</td>
+                    <td>{{entry.get_dst_username()}}</td>
+                    <td>{{entry.get_amount()}}</td>
+                    <td>{{entry.get_type()}}</td>
+
+
+
+
+                </tr>
+                {% endfor %}
+
+
+            </table>
+        </div>
+
+
+    </div>
+
+</div>
+
+{% endblock %}

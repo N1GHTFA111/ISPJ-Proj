@@ -1,0 +1,174 @@
+{% extends 'dashboard_admin_base.html' %}
+
+{% block content %}
+<div class="container-fluid p-0">
+
+    <div class="mb-3">
+        <h1 class="h3 d-inline align-middle" id="page-identifier">Roles</h1>
+
+    </div>
+    {% from "includes/_formHelper.html" import render_field %}
+    <form action="{{ url_for('createRole_Admin', username=current_user.get_username(), logged_in=current_user.is_authenticated, profile_pic_name=current_user.get_profile_pic()) }}"
+          method="POST" enctype="multipart/form-data">
+        {{ createform.csrf_token }}
+
+        <!--                    <input type="submit" value="Checkout" class="btn btn-dark">-->
+        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#createProduct">
+            Create New Role
+        </button>
+        <div class="modal" id="createProduct">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <!--                                Modal Header-->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Create Role</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!--                                Modal Body-->
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            {{ render_field(createform.rolename, class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(createform.havesuperadmin_permission, class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(createform.havefinanceadmin_permission, class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(createform.haveproductadmin_permission, class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(createform.haveblogadmin_permission, class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(createform.havepradmin_permission, class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(createform.haveuser_permission, class="form-control") }}
+                        </div>
+
+
+                        Are you sure you want to continue?
+                    </div>
+
+                    <!--                                Modal Footer-->
+                    <div class="modal-footer">
+                        <input type="submit" value="Create" class="btn btn-warning">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="row" style="overflow:auto;">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Access Control Matrix</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover my-0">
+                        <thead>
+                        <tr>
+                            <th>Role Id</th>
+                            <th class="">rolename</th>
+                            <th class="">superadmin_permission</th>
+                            <th class="">financeadmin_permission</th>
+                            <th class="">productadmin_permission</th>
+                            <th class="">blogadmin_permission</th>
+                            <th class="">pradminadmin_permission</th>
+                            <th class="">user_permission</th>
+                            <th class="">admin_permission</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                            <!--											<th class="d-none d-md-table-cell">Account Id</th>-->
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for role in rolemodel %}
+                        <tr>
+                            <td>{{role.get_id()}}</td>
+                            <td class="">{{role.get_rolename()}}</td>
+                            <td class="">{{role.get_superadmin_permission()}}</td>
+                            <td class="">{{role.get_financeadmin_permission()}}</td>
+                            <td class="">{{role.get_productadmin_permission()}}</td>
+                            <td class="">{{role.get_blogadmin_permission()}}</td>
+                            <td class="">{{role.get_pradmin_permission()}}</td>
+                            <td class="">{{role.get_user_permission()}}</td>
+                            <td class="">{{role.get_admin_permission()}}</td>
+                            {% if role.get_rolename() not in ["SUPER_ADMIN", "BLOG_ADMIN", "FINANCE_ADMIN",
+                            "PRODUCT_ADMIN",
+                            "USER", "PR_ADMIN"] %}
+                            <td>
+                                <a href="{{ url_for('updateRole_Admin', role_id=role.get_id(), username=current_user.get_username(), logged_in=current_user.is_authenticated) }}"
+                                   class="btn btn-warning">Update</a>
+                            </td>
+                            {% else %}
+                            <td>Unavailable</td>
+                            {% endif %}
+                            {% if role.get_rolename() not in ["SUPER_ADMIN", "BLOG_ADMIN", "FINANCE_ADMIN",
+                            "PRODUCT_ADMIN",
+                            "USER", "PR_ADMIN"] %}
+                            <td>
+                                <form action="{{ url_for('deleteRole_Admin', username=current_user.get_username(), logged_in=current_user.is_authenticated, profile_pic_name=current_user.get_profile_pic() , role_id=role.get_id()) }}"
+                                      method="POST">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <!--                    <input type="submit" value="Delete" class="btn btn-danger">-->
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                            data-bs-target="#myModal_{{role.get_id()}}_deleteRole">
+                                        Delete
+                                    </button>
+                                    <!--                    Modal-->
+                                    <div class="modal fade" id="myModal_{{role.get_id()}}_deleteRole"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+
+                                                <!--                                Modal Header-->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Delete Confirmation</h4>
+                                                    <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <!--                                Modal Body-->
+                                                <div class="modal-body">
+                                                    Are you sure you want to delete this role?
+                                                </div>
+
+                                                <!--                                Modal Footer-->
+                                                <div class="modal-footer">
+                                                    <input type="submit" value="Delete" class="btn btn-danger">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Cancel
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </td>
+                            {% else %}
+                            <td>Unavailable</td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'login_base.html' %}
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+<section class="h-100 gradient-form" style="">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-xl-10">
+                <div class="card rounded-3 text-black">
+                    <div class="row g-0">
+                        <div class="col-lg 6">
+                            <div class="card-body p-md-5 mx-md-4">
+                                <div class="text-right">
+                                    <h6 style=""><a href="{{url_for('Sentinel_Routes.index')}}" style="color: black;">&larr; Back to Home</a></h6>
+                                </div>
+                                <div class="text-center">
+                                    <img src="{{ url_for('static', filename='media/sentinel_black.png')}}" style="width: 185px;" alt="logo">
+                                    <h4 class="mt-1 mb-5 pb-1">Sentinel</h4>
+                                </div>
+
+                                <form method="POST" action="">
+                                     <input type="hidden" name="csrf_token" value="{{ form.csrf_token }}">
+
+                                    <p>Please login to your account</p>
+                                    {% with messages = get_flashed_messages() %}
+                                        {% if messages %}
+                                            {% for message in messages %}
+                                            <p style="color: red;">{{message}}</p>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endwith %}
+
+
+                                    <div class="form-group form-outline mb-4">
+                                        {{ render_field(form.email, class="form-control") }}
+                                    </div>
+                                    <div class="form-group form-outline mb-4">
+                                        {{ render_field(form.password, class="form-control") }}
+                                    </div>
+
+
+                                    <div class="text-center pt-1 mb-5 pb-1">
+                                        <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"  style="width:100%;" type="submit">
+                                            Login
+                                        </button>
+
+                                    </div>
+
+                                    <div class="d-flex align-items-center justify-content-center pb-4">
+                                        <p class="mb-0 me-2">Don't have an account?</p>
+                                        <button type="button" class="btn">
+                                            <a href="{{ url_for('Sentinel_Routes.registerUser') }}" style="text-decoration: none;">Create Account</a>
+                                        </button>
+                                    </div>
+
+                                </form>
+
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
+                            <div class="text-white px-3 py-4 p-md-5 mx-md-4">
+                                <h4 class="mb-4"> Revolutionising Data Security</h4>
+                                <p class="small mb-0">We aim to give the best customer experience possible by providing the best parts possible
+                                    so that you can have maximum satisfaction.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+{% endblock %}

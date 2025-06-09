@@ -1,0 +1,118 @@
+{% extends 'dashboard_user_base.html' %}
+
+{% block content %}
+
+<div class="container-fluid p-0">
+
+    <div class="mb-3">
+        <h1 class="h3 d-inline align-middle">Profile</h1>
+        <h4 class="mb-4"> Update your account here</h4>
+        <p class="medium mb-0">We will not share information regarding your data without your consent.
+            Medusa Pte Ltd
+            will always send you a verification email if we intend to share your information to a
+            third-party source.
+            Your data will be strictly protected under the Personal Data Protection Act.</p>
+        <form method="POST" action="" enctype="multipart/form-data">
+            {{ form.csrf_token}}
+            <p>Please register for an account</p>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            <p style="color: red;">{{message}}</p>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            {% from "includes/_formHelper.html" import render_field %}
+            <div class="form-group form-outline mb-4">
+                {{ render_field(form.username, class="form-control") }}
+            </div>
+
+            <div class="form-group form-outline mb-4">
+                {{ render_field(form.email, class="form-control") }}
+            </div>
+            <div class="form-group form-outline mb-4">
+                {{ render_field(form.phone, class="form-control") }}
+            </div>
+            <div class="form-group form-outline mb-4">
+                {{ render_field(form.old_password, class="form-control") }}
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="form-group form-outline mb-4">
+                        {{ render_field(form.password, class="form-control") }}
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="form-group form-outline mb-4">
+                        {{ render_field(form.password_confirm, class="form-control") }}
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-outline mb-4">
+                {{ render_field(form.enable_2fa, class="form-control") }}
+            </div>
+
+
+            <div class="text-center pt-1 mb-5 pb-1">
+                <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
+                        style="width:100%;" type="submit">
+                    Update
+                </button>
+            </div>
+
+
+        </form>
+
+
+        <!--                                <button class="btn btn-primary btn-block bg-danger"  style="width:10%;" type="submit">-->
+        <!--                                            Delete User-->
+        <!--                                </button>-->
+
+        <form action="{{ url_for('Bank_Routes.deleteUser', email=current_user.get_email()) }}"
+              method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <!--                    <input type="submit" value="Delete" class="btn btn-danger">-->
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                    data-bs-target="#myModal_{{current_user.get_id()}}_deleteUser">
+                Delete User
+            </button>
+            <!--                    Modal-->
+            <div class="modal fade" id="myModal_{{current_user.get_id()}}_deleteUser" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!--                                Modal Header-->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Delete Confirmation</h4>
+                            <button type="button" class="btn-close"
+                                    data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <!--                                Modal Body-->
+                        <div class="modal-body">
+                            Are you sure you want to delete this user?
+                        </div>
+
+                        <!--                                Modal Footer-->
+                        <div class="modal-footer">
+                            <input type="submit" value="Delete" class="btn btn-danger">
+                            <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Cancel
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+    </div>
+    <div class="row" style="overflow:auto;">
+
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends 'dashboard_admin_base.html' %}
+
+{% block content %}
+<div class="container-fluid p-0">
+
+    <div class="mb-3">
+        <h1 class="h3 d-inline align-middle" id="page-identifier">Secure Storage Center Files</h1>
+
+    </div>
+    {% from "includes/_formHelper.html" import render_field %}
+    <form action="{{ url_for('Bank_Routes.upload_file_to_scc', username=current_user.get_username(), logged_in=current_user.is_authenticated) }}"
+          method="POST" enctype="multipart/form-data">
+        {{ uploadform.csrf_token }}
+
+        <!--                    <input type="submit" value="Checkout" class="btn btn-dark">-->
+        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#createProduct">
+            Upload File
+        </button>
+        <div class="modal" id="createProduct">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <!--                                Modal Header-->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Upload File</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!--                                Modal Body-->
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            {{ render_field(uploadform.file, class="form-control") }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ render_field(uploadform.existing_tags, class="form-control", multiple="multiple") }}
+                        </div>
+
+
+
+
+                        Are you sure you want to continue?
+                    </div>
+
+                    <!--                                Modal Footer-->
+                    <div class="modal-footer">
+                        <input type="submit" value="Create" class="btn btn-warning">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="row" style="overflow:auto;">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">All Files</h5>
+            </div>
+            <div class="card-header">
+                <h5 class="card-title mb-0">Owned Files</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover my-0">
+                        <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th class="">Time of Upload</th>
+                            <th class="">Bucket Name</th>
+                            <th class=""></th>
+                            <!--											<th class="d-none d-md-table-cell">Account Id</th>-->
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for file in filemodel %}
+                        <tr>
+                            <td>{{file.get_name()}}</td>
+                            <td class="">{{file.get_time_of_upload()}}</td>
+                            <td class="">{{file.get_bucket().get_name()}}</td>
+                            {% if file.get_temp_deleted() != "Deleted" %}
+                            <td>
+                                <a href="{{ url_for('Bank_Routes.downloadFile', file_id=file.get_id(), username=current_user.get_username(), logged_in=current_user.is_authenticated) }}"
+                                   class="btn btn-warning">Download</a>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('Bank_Routes.delete_file_to_scc_temporarily', file_id=file.get_id(), username=current_user.get_username(), logged_in=current_user.is_authenticated) }}"
+                                   class="btn btn-warning">Archive</a>
+                            </td>
+                            {% else %}
+                            <td>
+                                <a href="{{ url_for('Bank_Routes.recoverFile', file_id=file.get_id(), username=current_user.get_username(), logged_in=current_user.is_authenticated) }}"
+                                   class="btn btn-warning">Recover</a>
+                            </td>
+                            <td>Deleting on: {{file.get_restore_time_limit()}}</td>
+                            {% endif %}
+
+
+
+
+
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'dashboard_user_base.html' %}
+
+{% block content %}
+
+<div class="container-fluid p-0">
+
+    <div class="mb-3">
+        <h1 class="h3 d-inline align-middle">Deposit/Withdraw</h1>
+        <h2 class="h3 d-inline align-middle">Balance: {{balance}}</h2>
+        <form method="POST" action="" enctype="multipart/form-data">
+            {{ form.csrf_token}}
+            <p>Please register for an account</p>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            <p style="color: red;">{{message}}</p>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            {% from "includes/_formHelper.html" import render_field %}
+
+            <div class="form-group form-outline mb-4">
+                {{ render_field(form.option, class="form-control") }}
+            </div>
+            <div class="form-group form-outline mb-4">
+                {{ render_field(form.amount, class="form-control") }}
+            </div>
+
+
+            <div class="text-center pt-1 mb-5 pb-1">
+                <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
+                        style="width:100%;" type="submit">
+                    Authorize
+                </button>
+            </div>
+
+
+        </form>
+
+
+
+    </div>
+    <div class="row" style="overflow:auto;">
+
+
+    </div>
+</div>
+{% endblock %}

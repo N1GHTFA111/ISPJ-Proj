@@ -1,0 +1,65 @@
+i have 5 roles on the bank site
+user (can withdraw, deposit and see news and submit requests)
+employee (can see transaction history
+IT (like an employee, but account can access the sentinel dashboard)
+manager (can only view customer details and change customer details via sentinel dashboard and access evirec, can
+can only view employees but cannot change their details, can view transaction stuff)
+executive (can view everything and change user accounts)
+
+for logs
+developer can see only api key logs
+manager and above can see all logs
+
+user lv1
+employee lv2
+IT lv3
+manager lv4
+executive lv5
+
+bank website has a user management page (should all be contained in bank app)
+employee can only see user
+IT (stand for IT) can see only email, username and role of employee and user, can edit their username, email and password only
+manager can see lv3 and below details, can only edit employee and developer
+senior manager can see lv4 and below, can only edit manager, developer and employee
+executive can see all levels, can edit everything but employee
+
+IT, manager, senior manager and executive accounts can access Sentinel
+
+
+on the bank website
+whenever transaction occurs > transaction history updated
+employee should only be able to see username, date, amount, type
+IT and above should be able to see more since they need to correlate logs
+
+for logs dashboard
+those with access should only be able to see the app api key logs
+
+on sentinel there is a file sharing platform
+individual employees can only access the page for creating buckets and storing files and sharing
+
+there will be 3 buckets immutable
+public, private and confidential
+public can access files with no pii (lv2 minimum)
+private can access document files like word or pdf with pii (lv3 minimum)
+confidential can access trade secret and other files (lv6 minimum)
+
+how to connect
+create a IT account on the bank site
+link to Sentinel
+then IT account can login to Sentinel with IAM (must use IAM)
+gets api key
+append all users IT and above the API key in their IAM account so they can access the logs of the app
+
+only executive can view the roles but roles should not be touched.
+
+all iam users have a registered api key
+
+maybe i should register Sentinel user and let them choose the api key
+
+so employee role should be able to access the dashboard given the api key that they are connected to
+
+developer role gets an api key
+
+NOTE rmb to update the ganache transaction address and user address
+
+
